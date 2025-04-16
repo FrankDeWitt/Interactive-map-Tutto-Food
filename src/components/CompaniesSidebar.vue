@@ -392,7 +392,7 @@ $color-hover: #e0e0e0;
   }
 
   .region-item {
-    padding: 20px 125px 0 50px;
+    padding: 20px 125px 20px 50px;
     height: 100px;
 
     .region-number {

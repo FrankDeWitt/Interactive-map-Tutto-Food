@@ -16,7 +16,8 @@ export const foodWineCatalog = [
                 website: "www.ibericosberman.com",
                 stand: "F09-01",
                 position: "9",
-                products: "Iberian Bellota Ham, Iberian Cebo Ham, Iberian Bellota Shoulder, Iberian Cebo Shoulder, Morcón, Iberian Bellota Loin, Iberian Salchichón, Iberian Chorizo."
+                products: "Iberian Bellota Ham, Iberian Cebo Ham, Iberian Bellota Shoulder, Iberian Cebo Shoulder, Morcón, Iberian Bellota Loin, Iberian Salchichón, Iberian Chorizo.",
+                iproducts: "Prosciutto iberico Bellota, prosciutto iberico Cebo, spalla iberica Bellota, spalla iberica Cebo, Morcón, lomo iberico Bellota, salchichón iberico, chorizo iberico."
             },
             {
                 id: 2,
@@ -29,7 +30,9 @@ export const foodWineCatalog = [
                 website: "www.fisan.com",
                 stand: "F09-02",
                 position: "8",
-                products: "Iberian Pork Products, Artisan Cured Iberian Pork Products (Ham, Shoulder, Loin, Chorizo, Salchichón, Coppa, and Sobrasada), Iberico Pork Meats (Sirloin, Presa, Secreto, Pluma, Lagarto, Abanico, Cheeks)."
+                products: "Iberian Pork Products, Artisan Cured Iberian Pork Products (Ham, Shoulder, Loin, Chorizo, Salchichón, Coppa, and Sobrasada), Iberico Pork Meats (Sirloin, Presa, Secreto, Pluma, Lagarto, Abanico, Cheeks).",
+                iproducts: "Prodotti di maiale iberico, prodotti iberici stagionati artigianali (prosciutto, spalla, lomo, chorizo, salchichón, coppa e sobrasada), carni di maiale iberico (filetto, presa, secreto, pluma, lagarto, abanico, guance)."
+
             },
             {
                 id: 3,
@@ -42,7 +45,8 @@ export const foodWineCatalog = [
                 website: "www.estrelladecastilla.es",
                 stand: "F09-03",
                 position: "7",
-                products: "Iberian Products (Cured and Meat)."
+                products: "Iberian Products (Cured and Meat).",
+                iproducts: "Prodotti iberici (stagionati e carni)."
             },
             {
                 id: 4,
@@ -55,7 +59,8 @@ export const foodWineCatalog = [
                 website: "www.laprudencia.com",
                 stand: "F09-04",
                 position: "6",
-                products: "Iberian Bellota Ham, Iberian Cebo de Campo Shoulder Boneless, Iberian Serrano Gran Matanza Ham Boneless, Iberian Serrano Ham Bone in, Iberian Bellota Chorizo, Iberian Bellota Salchichón, Iberian Bellota Lomo, Iberian Bellota Cured Presa."
+                products: "Iberian Bellota Ham, Iberian Cebo de Campo Shoulder Boneless, Iberian Serrano Gran Matanza Ham Boneless, Iberian Serrano Ham Bone in, Iberian Bellota Chorizo, Iberian Bellota Salchichón, Iberian Bellota Lomo, Iberian Bellota Cured Presa.",
+                iproducts: "Prosciutto Iberico Bellota, Spalla Iberica Cebo de Campo disossata, Prosciutto Iberico Serrano Gran Matanza disossato, Prosciutto Iberico Serrano con osso, Chorizo Iberico Bellota, Salchichón Iberico Bellota, Lomo Iberico Bellota, Presa Iberica Bellota stagionata."
             },
             {
                 id: 5,
@@ -68,7 +73,8 @@ export const foodWineCatalog = [
                 website: "www.revisan.com",
                 stand: "F09-05",
                 position: "4",
-                products: "Iberian Pork Products."
+                products: "Iberian Pork Products.",
+                iproducts: "Prodotti di maiale iberico."
             },
             {
                 id: 6,
@@ -81,7 +87,8 @@ export const foodWineCatalog = [
                 website: "www.ibericostorreon.com",
                 stand: "F09-06",
                 position: "3",
-                products: "100% Acorn-fed Iberian Ham, Iberian Chorizo, Iberian Pastrami."
+                products: "100% Acorn-fed Iberian Ham, Iberian Chorizo, Iberian Pastrami.",
+                iproducts: "Prosciutto iberico 100% di ghianda, chorizo iberico, pastrami iberico."
             },
             {
                 id: 7,
@@ -94,7 +101,8 @@ export const foodWineCatalog = [
                 website: "www.grupohermi.com",
                 stand: "F09-07",
                 position: "2",
-                products: "Whole Fresh Rabbit, Rabbit Legs, Rabbit Shoulders, Rabbit Loin, Boneless Rabbit Meat, Rabbit Burger, Rabbit Medallions, Rabbit Liver, Chopped Rabbit, Rabbit Mincemeat."
+                products: "Whole Fresh Rabbit, Rabbit Legs, Rabbit Shoulders, Rabbit Loin, Boneless Rabbit Meat, Rabbit Burger, Rabbit Medallions, Rabbit Liver, Chopped Rabbit, Rabbit Mincemeat.",
+                iproducts: "Coniglio intero fresco, cosce di coniglio, spalle di coniglio, lombata di coniglio, carne di coniglio disossata, burger di coniglio, medaglioni di coniglio, fegato di coniglio, coniglio a pezzi, macinato di coniglio."
             },
             {
                 id: 8,
@@ -107,7 +115,8 @@ export const foodWineCatalog = [
                 website: "www.arcecarne.es",
                 stand: "F09-08",
                 position: "1",
-                products: "Matured Red Meat (Cow, Ox, Angus, Wagyu), Gourmet Burgers, Lamb."
+                products: "Matured Red Meat (Cow, Ox, Angus, Wagyu), Gourmet Burgers, Lamb.",
+                iproducts: "Carne rossa frollata (Vacca, Bue, Angus, Wagyu), Burger gourmet, Agnello."
             },
             {
                 id: 9,
@@ -120,7 +129,8 @@ export const foodWineCatalog = [
                 website: "www.ibericosguillen.com",
                 stand: "F09-09",
                 position: "17",
-                products: "100% Acorn-Fed Iberian Ham, 100% Acorn-Fed Iberian Loin, Acorn-Fed Iberian Chorizo, Acorn-Fed Iberian Salami."
+                products: "100% Acorn-Fed Iberian Ham, 100% Acorn-Fed Iberian Loin, Acorn-Fed Iberian Chorizo, Acorn-Fed Iberian Salami.",
+                iproducts: "Prosciutto iberico 100% di ghianda, lomo iberico 100% di ghianda, chorizo iberico di ghianda, salame iberico di ghianda."
             },
             {
                 id: 10,
@@ -133,7 +143,8 @@ export const foodWineCatalog = [
                 website: "www.torrencinas.com",
                 stand: "F09-10",
                 position: "16",
-                products: "100% Acorn-Fed Iberian Ham, 75% Acorn-Fed Iberian Loin, Acorn-Fed Iberian Chorizo, Acorn-Fed Iberian Salami, Iberian Guanciale, 75% Cebo de Campo Iberian."
+                products: "100% Acorn-Fed Iberian Ham, 75% Acorn-Fed Iberian Loin, Acorn-Fed Iberian Chorizo, Acorn-Fed Iberian Salami, Iberian Guanciale, 75% Cebo de Campo Iberian.",
+                iproducts: "Prosciutto iberico 100% di ghianda, lomo iberico 75% di ghianda, chorizo iberico di ghianda, salame iberico di ghianda, guanciale iberico, iberico 75% Cebo de Campo."
             },
             {
                 id: 11,
@@ -146,7 +157,8 @@ export const foodWineCatalog = [
                 website: "www.beher.com",
                 stand: "F09-11",
                 position: "15",
-                products: "Iberian ham and Iberian cured pork products."
+                products: "Iberian ham and Iberian cured pork products.",
+                iproducts: "Prosciutto iberico e prodotti di suino iberico stagionati."
             },
             {
                 id: 12,
@@ -159,7 +171,8 @@ export const foodWineCatalog = [
                 website: "www.cascajaresfoodservice.com",
                 stand: "F09-12",
                 position: "14",
-                products: "Sous-Vide Cooked Meats."
+                products: "Sous-Vide Cooked Meats.",
+                iproducts: "Carni cotte sottovuoto."
             },
             {
                 id: 13,
@@ -172,7 +185,8 @@ export const foodWineCatalog = [
                 website: "www.embutidosgeal.com",
                 stand: "F09-13",
                 position: "12",
-                products: "Cured Beef, Cured Wagyu, Cured Black Angus, Cured Ox, Cured Lamb Loin, Halal Products, Cured Ham, Cured Loin, Chorizo, Sausages."
+                products: "Cured Beef, Cured Wagyu, Cured Black Angus, Cured Ox, Cured Lamb Loin, Halal Products, Cured Ham, Cured Loin, Chorizo, Sausages.",
+                iproducts: "Manzo stagionato, Wagyu stagionato, Black Angus stagionato, bue stagionato, lombo di agnello stagionato, prodotti halal, prosciutto stagionato, lombo stagionato, chorizo, salsicce."
             },
             {
                 id: 14,
@@ -185,7 +199,8 @@ export const foodWineCatalog = [
                 website: "www.hermanosmartinsanchez.es",
                 stand: "F09-14",
                 position: "11",
-                products: "Iberian frozen pork, Iberian ham and Iberian cured pork products."
+                products: "Iberian frozen pork, Iberian ham and Iberian cured pork products.",
+                iproducts: "Maiale iberico surgelato, prosciutto iberico e prodotti di suino iberico stagionati."
             },
             {
                 id: 15,
@@ -198,10 +213,10 @@ export const foodWineCatalog = [
                 website: "www.castellanadecarnes.es",
                 stand: "F09-15",
                 position: "10",
-                products: "Beaf products."
+                products: "Beaf products.",
+                iproducts: "Prodotti di manzo."
             }
         ],
-        clickable: true,
     },
     {
         id: 2,
@@ -212,7 +227,7 @@ export const foodWineCatalog = [
             {
                 id: 1,
                 name: "MAES HONEY",
-                logo: "dummy.png",
+                logo: "maes.png",
                 manager: "Patricia Gorjón Andrés",
                 address: "Carretera CL-512, Km 8,2\n37187 Aldeatejada (Salamanca) Spain",
                 phone: "+34 622 322 211 / +34 923 341 214",
@@ -220,12 +235,13 @@ export const foodWineCatalog = [
                 website: "www.maeshoney.com",
                 stand: "C23-01",
                 position: "1",
-                products: "Honey for Food Service, Retail and Industry."
+                products: "Honey for Food Service, Retail and Industry.",
+                iproducts: "Miele per la ristorazione, il retail e l'industria."
             },
             {
                 id: 2,
                 name: "CHERKY FOODS",
-                logo: "dummy.png",
+                logo: "cherky.png",
                 manager: "David Saldaña Mayor",
                 address: "Calle Antonio García Martín 3, 2J\n09007 Burgos (Burgos) Spain",
                 phone: "+34 670 470 073",
@@ -233,12 +249,13 @@ export const foodWineCatalog = [
                 website: "www.cherkyfoods.eu",
                 stand: "C23-02",
                 position: "2",
-                products: "ECO Beef & Pork Jerky, ECO Biltong Beef & Pork Sticks, ECO Meat, Fruit & Vegetable Bars, ECO Dried Fruit & Superfood Snacks, ECO Vegan Snacks, ECO Keto Bars with MCT & Collagen, ECO Healthy Cookies."
+                products: "ECO Beef & Pork Jerky, ECO Biltong Beef & Pork Sticks, ECO Meat, Fruit & Vegetable Bars, ECO Dried Fruit & Superfood Snacks, ECO Vegan Snacks, ECO Keto Bars with MCT & Collagen, ECO Healthy Cookies.",
+                iproducts: "Carne secca di manzo e maiale ECO, bastoncini di manzo e maiale Biltong ECO, barrette di carne, frutta e verdura ECO, snack di frutta secca e superfood ECO, snack vegani ECO, barrette chetogeniche ECO con MCT e collagene, biscotti salutari ECO."
             },
             {
                 id: 3,
                 name: "GRUPO PISTACYL",
-                logo: "dummy.png",
+                logo: "pistacyl.png",
                 manager: "Goran Dujkovic",
                 address: "Calle Lagartillos 2\n47450 Pozal de Gallinas (Valladolid) Spain",
                 phone: "+34 672 635 221",
@@ -246,12 +263,13 @@ export const foodWineCatalog = [
                 website: "www.grupopistacyl.com",
                 stand: "C23-03",
                 position: "3",
-                products: "Natural Pistachios, Pistachio Paste, Pistachio Cream, Pistachio Kernels, Sliced/Chopped Pistachios, Pistachio Grain/Flour, Pistachio Praliné."
+                products: "Natural Pistachios, Pistachio Paste, Pistachio Cream, Pistachio Kernels, Sliced/Chopped Pistachios, Pistachio Grain/Flour, Pistachio Praliné.",
+                iproducts: "Pistacchi Naturali, Pasta di Pistacchio, Crema di Pistacchio, Nocciole di Pistacchio, Pistacchi a Fette/Tritati, Farina di Pistacchio, Praliné di Pistacchio."
             },
             {
                 id: 4,
                 name: "ENTRESETAS",
-                logo: "dummy.png",
+                logo: "entresetas.png",
                 manager: "Nazaret Mateos",
                 address: "Carretera CL-615, Km 22\n34300 Paredes de Nava (Palencia) Spain",
                 phone: "+34 675 439 900",
@@ -259,12 +277,13 @@ export const foodWineCatalog = [
                 website: "www.entresetas.com",
                 stand: "C23-04",
                 position: "4",
-                products: "Fresh Mushrooms, Mushroom Salt, Mushroom Flour, Dehydrated Mushrooms, Mushroom Sauce, Mushroom Infusions, Mushroom Preserves."
+                products: "Fresh Mushrooms, Mushroom Salt, Mushroom Flour, Dehydrated Mushrooms, Mushroom Sauce, Mushroom Infusions, Mushroom Preserves.",
+                iproducts: "Funghi Freschi, Sale di Funghi, Farina di Funghi, Funghi Disidratati, Salsa di Funghi, Infusi di Funghi, Conserve di Funghi."
             },
             {
                 id: 5,
                 name: "LA HUERTA SPANISH HOMEGROWN",
-                logo: "dummy.png",
+                logo: "huerta.png",
                 manager: "Ángela Bodega",
                 address: "Calle Muelle de la Estación s/n\n24223 Fresno de la Vega (León) Spain",
                 phone: "+34 609 568 786",
@@ -272,12 +291,13 @@ export const foodWineCatalog = [
                 website: "www.lahuertadefresno.com",
                 stand: "C23-05",
                 position: "5",
-                products: "Home-grown Canned Vegetables, Vegetable Creams, Ready Meals, Natural Sauces, Jams, Jalapeño Hot Sauce."
+                products: "Home-grown Canned Vegetables, Vegetable Creams, Ready Meals, Natural Sauces, Jams, Jalapeño Hot Sauce.",
+                iproducts: "Verdure in scatola coltivate in loco, Creme di verdure, Pasti pronti, Salse naturali, Marmellate, Salsa piccante Jalapeño."
             },
             {
                 id: 6,
                 name: "MYKÉS GOURMET",
-                logo: "dummy.png",
+                logo: "mykes.png",
                 manager: "Javier Llorente",
                 address: "Poligono Industrial Las Casas C/d\nParcela 54 Nave 8\n42005 Soria (Soria) Spain",
                 phone: "+34 619 451 521",
@@ -285,12 +305,13 @@ export const foodWineCatalog = [
                 website: "www.mykesgourmet.com",
                 stand: "C23-06",
                 position: "6",
-                products: "Extra Virgin Olive Oil with Truffle, Cheese Creams with Truffle, Preserved Truffles, Artisan Honey with Truffle, Chocolate with Black Truffle, Soya Sauce with Black Truffle, Organic Fleur de Sel with Truffle."
+                products: "Extra Virgin Olive Oil with Truffle, Cheese Creams with Truffle, Preserved Truffles, Artisan Honey with Truffle, Chocolate with Black Truffle, Soya Sauce with Black Truffle, Organic Fleur de Sel with Truffle.",
+                iproducts: "Olio Extra Vergine di Oliva al Tartufo, Creme di Formaggio al Tartufo, Tartufo Conservato, Miele Artigianale al Tartufo, Cioccolato al Tartufo Nero, Salsa di Soia al Tartufo Nero, Fleur de Sel Bio al Tartufo."
             },
             {
                 id: 7,
                 name: "QUEVANA VEGAN CHEESE",
-                logo: "dummy.png",
+                logo: "quevana.png",
                 manager: "Alejandro Álvarez Rubio / Ferran Parada i Rivelles",
                 address: "Camino Viejo 17\n40196 La Lastrilla (Segovia) Spain",
                 phone: "+34 669 113 703 / +34 653 894 895",
@@ -298,12 +319,13 @@ export const foodWineCatalog = [
                 website: "www.quevana.es",
                 stand: "C23-07",
                 position: "7",
-                products: "Aged Vegan Cheeses made from Cashew."
+                products: "Aged Vegan Cheeses made from Cashew.",
+                iproducts: "Formaggi Vegani Stagionati a Base di Anacardi."
             },
             {
                 id: 8,
                 name: "CHOCOLATES TRAPA (EUROPRALINÉ)",
-                logo: "dummy.png",
+                logo: "trapa.png",
                 manager: "Sonia Azpeleta",
                 address: "Autovía 62, Km 90\n34208 San Isidro de Dueñas (Palencia) Spain",
                 phone: "+34 34 671 458 540",
@@ -311,12 +333,13 @@ export const foodWineCatalog = [
                 website: "www.trapa.com",
                 stand: "C23-08",
                 position: "8",
-                products: "Chocolate and Confectionery Products."
+                products: "Chocolate and Confectionery Products.",
+                iproducts: "Cioccolato e prodotti dolciari."
             },
             {
                 id: 9,
                 name: "ONESIMUM",
-                logo: "dummy.png",
+                logo: "onesimum.png",
                 manager: "Joaquín Buch",
                 address: "Calle Padre Claret 12, 1º Planta\n40001 Segovia (Segovia) Spain",
                 phone: "+34 675 480 832",
@@ -324,12 +347,13 @@ export const foodWineCatalog = [
                 website: "www.onesimum.com",
                 stand: "C23-09",
                 position: "9",
-                products: "Organic Rice Cakes, Artisan Biscuits and Gluten-Free Artisan Biscuits, Organic Extra Virgin Olive Oil, Organic Wines and Dealcoholised Wines, Organic Honeys and Organic Artisan Jams."
+                products: "Organic Rice Cakes, Artisan Biscuits and Gluten-Free Artisan Biscuits, Organic Extra Virgin Olive Oil, Organic Wines and Dealcoholised Wines, Organic Honeys and Organic Artisan Jams.",
+                iproducts: "Gallette di riso biologiche, biscotti artigianali e biscotti artigianali senza glutine, olio extra vergine di oliva biologico, vini biologici e vini dealcolizzati, mieli biologici e marmellate artigianali biologiche."
             },
             {
                 id: 10,
                 name: "CALNORT",
-                logo: "dummy.png",
+                logo: "calnort.png",
                 manager: "Eduardo López",
                 address: "Calle Alfoz de Bricia 15 – Plot 97\n09001 Burgos (Burgos) Spain",
                 phone: "+34 947 298 248",
@@ -337,9 +361,9 @@ export const foodWineCatalog = [
                 website: "www.calnort.com",
                 stand: "C23-10",
                 position: "10",
-                products: "Dehydrated Salty And Sweet Products, Powdered And Cubes Broths, Soups, Creams, Sauces, Thickeners, Jellies, Mousses, Premium Desserts, Flans, Custards & Puddings."
+                products: "Dehydrated Salty And Sweet Products, Powdered And Cubes Broths, Soups, Creams, Sauces, Thickeners, Jellies, Mousses, Premium Desserts, Flans, Custards & Puddings.",
+                iproducts: "Prodotti Disidratati Salati e Dolci, Brodi in Polvere e a Cubetti, Zuppe, Creme, Salse, Addensanti, Gelatine, Mousse, Dessert Premium, Budini, Crema Pasticcera e Puddings."
             }
         ],
-        clickable: true,
     },
 ];

@@ -281,7 +281,8 @@ $color-hover: #e0e0e0;
     }
 
     .region-name {
-      font-size: 1.1rem;
+      font-size: 0.9rem;
+      margin-right: 50px;
     }
 
     .logo-container {

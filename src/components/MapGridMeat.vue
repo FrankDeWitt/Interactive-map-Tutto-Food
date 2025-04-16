@@ -107,7 +107,6 @@ onMounted(async () => {
               :alt="getCompanyForPosition(position).name"
               class="company-logo"
           />
-          <span class="company-position">{{ position }}</span>
         </div>
       </template>
       <template v-else-if="!isDivEmpty(position)">
@@ -143,20 +142,6 @@ onMounted(async () => {
 
   &.has-company {
     cursor: pointer;
-
-    &:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      z-index: 1;
-
-      .company-logo {
-        transform: scale(1.05);
-      }
-
-      .company-position {
-        opacity: 1;
-      }
-    }
   }
 }
 
@@ -175,23 +160,6 @@ onMounted(async () => {
   object-fit: contain;
   margin-bottom: 5px;
   transition: transform 0.3s ease;
-}
-
-.company-position {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
 }
 
 .empty-position {

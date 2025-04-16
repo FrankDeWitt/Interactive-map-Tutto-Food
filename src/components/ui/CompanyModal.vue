@@ -179,7 +179,7 @@ onBeforeUnmount(() => {
                   <div class="products-columns">
                     <div class="column column-left" v-if="currentCompany.iproducts">
                       <span class="flag">
-                        <img src="https://hatscripts.github.io/circle-flags/flags/it.svg" width="35">
+                        <img src="https://hatscripts.github.io/circle-flags/flags/it.svg" width="36">
                       </span>
                       <h4 class="products-subtitle">Prodotti (D.O/IGP)_</h4>
                       <div class="products-list">
@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
                     </div>
                     <div class="column column-right" v-if="currentCompany.products">
                       <span class="flag">
-                        <img src="https://hatscripts.github.io/circle-flags/flags/uk.svg" width="35">
+                        <img src="https://hatscripts.github.io/circle-flags/flags/uk.svg" width="36">
                       </span>
                       <h4 class="products-subtitle">Products (D.O/IGP)_</h4>
                       <div class="products-list">
@@ -265,7 +265,6 @@ onBeforeUnmount(() => {
     backdrop-filter: blur(3px);
   }
 
-  // Selectores para animaciones cuando el modal está visible
   &.visible {
     .close-button {
       animation: fadeInRotate 0.5s 0.2s forwards;
@@ -430,7 +429,7 @@ onBeforeUnmount(() => {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 20px;
+    gap: 10px;
     flex: 1;
   }
 }
@@ -603,13 +602,16 @@ onBeforeUnmount(() => {
 // Pantallas FullHD (1080p)
 @media screen and (min-width: 1201px) and (max-width: 1920px) {
   .modal-content {
-    width: 70%;
-    height: 75%;
+    //DESHACER
+    //width: 70%;
+    //height: 75%;
+    width: 75%;
+    height: 100%;
   }
 
   .company-logo-container {
     .company-detail-logo {
-      max-height: 200px;
+      max-height: 290px;
     }
   }
 
@@ -627,15 +629,27 @@ onBeforeUnmount(() => {
   }
 
   .info-text, .products-list {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
   .close-button {
+    display: none;
     font-size: 28px;
     width: 40px;
     height: 40px;
     top: 12px;
     right: 12px;
+  }
+
+  .info-item {
+    &.stand{
+      top: 5%;
+      right: 5%;
+
+      .stand-text {
+        font-size: 1.6rem;
+      }
+    }
   }
 }
 

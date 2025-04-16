@@ -33,6 +33,7 @@ watch(() => props.isOpen, (newValue) => {
       modalVisible.value = true;
     }, 50);
   } else {
+    // Establecer inmediatamente a false cuando se cierra
     modalVisible.value = false;
   }
 }, { immediate: true });
@@ -71,7 +72,7 @@ const handleClose = () => {
   modalVisible.value = false;
   setTimeout(() => {
     emit('close');
-  }, 200);
+  }, 200); // Reducido de 400ms a 200ms
 };
 
 const handleKeyDown = (event) => {
@@ -177,12 +178,18 @@ onBeforeUnmount(() => {
                 <div class="products-container" v-if="currentCompany.iproducts || currentCompany.products">
                   <div class="products-columns">
                     <div class="column column-left" v-if="currentCompany.iproducts">
+                      <span class="flag">
+                        <img src="https://hatscripts.github.io/circle-flags/flags/it.svg" width="35">
+                      </span>
                       <h4 class="products-subtitle">Prodotti (D.O/IGP)_</h4>
                       <div class="products-list">
                         {{currentCompany.iproducts}}
                       </div>
                     </div>
                     <div class="column column-right" v-if="currentCompany.products">
+                      <span class="flag">
+                        <img src="https://hatscripts.github.io/circle-flags/flags/uk.svg" width="35">
+                      </span>
                       <h4 class="products-subtitle">Products (D.O/IGP)_</h4>
                       <div class="products-list">
                         {{currentCompany.products}}
@@ -200,6 +207,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="scss">
+// Animaciones (definidas al principio para usarlas en todo el documento)
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -450,7 +458,6 @@ onBeforeUnmount(() => {
   .info-text {
     color: #000;
     flex: 1;
-    font-size: 1.8rem;
 
     a {
       color: #000;
@@ -516,7 +523,6 @@ onBeforeUnmount(() => {
 // Subtítulo de productos
 .products-subtitle {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
   color: #000;
   font-weight: bold;
   opacity: 0;
@@ -556,10 +562,29 @@ onBeforeUnmount(() => {
 }
 
 // Estilos responsivos
+// Pantallas pequeñas y medianas
 @media screen and (max-width: 1200px) {
+  .modal-content {
+    width: 90%;
+    height: 80%;
+  }
+
+  .company-card {
+    width: 95%;
+    padding: 2rem;
+  }
+
+  .company-logo-container {
+    height: 180px;
+  }
+
   .products-columns {
     flex-direction: column;
     gap: 1.5rem;
+  }
+
+  .info-text, .products-list {
+    font-size: 1rem;
   }
 
   .products-title {
@@ -570,18 +595,39 @@ onBeforeUnmount(() => {
     font-size: 1.3rem;
   }
 
-  .products-list {
-    font-size: 1.2rem;
+  .info-item.stand .stand-text {
+    font-size: 1.6rem;
   }
 }
 
-@media screen and (max-width: 1920px) {
+// Pantallas FullHD (1080p)
+@media screen and (min-width: 1201px) and (max-width: 1920px) {
+  .modal-content {
+    width: 70%;
+    height: 75%;
+  }
+
+  .company-logo-container {
+    .company-detail-logo {
+      max-height: 200px;
+    }
+  }
+
+  .company-card {
+    width: 85%;
+    padding: 2.5rem;
+  }
+
   .company-name {
     font-size: 1.8rem;
   }
 
   .company-details {
     font-size: 1rem;
+  }
+
+  .info-text, .products-list {
+    font-size: 1.1rem;
   }
 
   .close-button {
@@ -593,13 +639,27 @@ onBeforeUnmount(() => {
   }
 }
 
+// Pantallas 2K (1440p)
 @media screen and (min-width: 1921px) and (max-width: 2560px) {
+  .modal-content {
+    width: 60%;
+    height: 75%;
+  }
+
+  .company-card {
+    width: 80%;
+  }
+
   .company-name {
     font-size: 2.5rem;
   }
 
   .company-details {
     font-size: 1.2rem;
+  }
+
+  .info-text, .products-list {
+    font-size: 1.4rem;
   }
 
   .close-button {
@@ -609,13 +669,44 @@ onBeforeUnmount(() => {
   }
 }
 
+// Pantallas 4K y superiores
 @media screen and (min-width: 2561px) {
+  .modal-content {
+    width: 50%;
+    height: 70%;
+  }
+
+  .company-card {
+    width: 75%;
+    padding: 4rem;
+  }
+
+  .company-logo-container {
+    height: 350px;
+  }
+
+  .company-detail-logo {
+    max-height: 400px;
+  }
+
   .company-name {
     font-size: 3rem;
   }
 
   .company-details {
     font-size: 1.5rem;
+  }
+
+  .info-text, .products-list {
+    font-size: 1.8rem;
+  }
+
+  .products-subtitle {
+    font-size: 1.8rem;
+  }
+
+  .info-item.stand .stand-text {
+    font-size: 2.5rem;
   }
 
   .close-button {

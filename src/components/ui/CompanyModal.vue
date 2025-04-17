@@ -72,7 +72,7 @@ const handleClose = () => {
   modalVisible.value = false;
   setTimeout(() => {
     emit('close');
-  }, 200); // Reducido de 400ms a 200ms
+  }, 200);
 };
 
 const handleKeyDown = (event) => {
@@ -602,11 +602,8 @@ onBeforeUnmount(() => {
 // Pantallas FullHD (1080p)
 @media screen and (min-width: 1201px) and (max-width: 1920px) {
   .modal-content {
-    //DESHACER
-    //width: 70%;
-    //height: 75%;
-    width: 75%;
-    height: 100%;
+    width: 70%;
+    height: 85%;
   }
 
   .company-logo-container {
@@ -633,7 +630,6 @@ onBeforeUnmount(() => {
   }
 
   .close-button {
-    display: none;
     font-size: 28px;
     width: 40px;
     height: 40px;

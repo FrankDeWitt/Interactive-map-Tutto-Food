@@ -286,7 +286,7 @@ $color-hover: #e0e0e0;
     }
 
     .logo-container {
-      height: 55px; /* Misma altura que .region-item */
+      height: 55px;
       width: 95px;
     }
 
@@ -346,7 +346,7 @@ $color-hover: #e0e0e0;
     }
 
     .logo-container {
-      height: 70px; /* Misma altura que .region-item */
+      height: 70px;
       width: 110px;
     }
 

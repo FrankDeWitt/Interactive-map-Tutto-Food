@@ -9,4 +9,8 @@ const app = createApp(App)
 
 app.use(router)
 
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    document.documentElement.classList.add('touch-device')
+}
+
 app.mount('#app')

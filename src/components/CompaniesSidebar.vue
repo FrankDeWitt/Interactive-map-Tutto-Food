@@ -10,10 +10,17 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['select-company']);
-
+const hoveredItemIndex = ref(null);
+const activeItemIndex = ref(null);
 const rippleInterval = ref(null);
+const touchStartTime = ref(0);
+const touchEndTime = ref(0);
 
-const selectCompany = (company) => {
+const selectCompany = (company, index) => {
+  // Aplica animación al elemento seleccionado
+  activeItemIndex.value = index;
+
+  // Emite el evento hacia arriba
   emit('select-company', company);
 
   window.dispatchEvent(new CustomEvent('company-change'));
@@ -24,6 +31,11 @@ const selectCompany = (company) => {
   }
 
   startRippleEffect();
+
+  // Restaurar estado activo después de un tiempo
+  setTimeout(() => {
+    activeItemIndex.value = null;
+  }, 800);
 };
 
 const startRippleEffect = () => {
@@ -35,6 +47,16 @@ const startRippleEffect = () => {
       rippleElement.classList.add('animate-ripple');
     }
   }, 3000);
+};
+
+
+const handleTouchEnd = (company, index) => {
+  touchEndTime.value = Date.now();
+
+  // Sólo activar si el toque fue rápido (menos de 300ms), comportamiento típico de tap
+  if (touchEndTime.value - touchStartTime.value < 300) {
+    selectCompany(company, index);
+  }
 };
 
 // Función para normalizar rutas similar a la del imageService
@@ -89,6 +111,12 @@ onMounted(async () => {
 
   // Asegurar que las imágenes estén cargadas
   await ensureImagesLoaded();
+
+  // Añadir detección para tablet/móvil
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (isTouchDevice) {
+    document.documentElement.classList.add('touch-device');
+  }
 });
 
 onBeforeUnmount(() => {
@@ -99,18 +127,35 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>EXHIBITORS</h2>
+      <div class="sidebar-instructions">
+        <div class="instruction-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12H3"></path><path d="m16 7 5 5-5 5"></path><path d="M7.8 7.8 3 12l4.8 4.8"></path></svg>
+        </div>
+        <p>Touch to see details</p>
+      </div>
+    </div>
+
     <ul class="region-list">
       <li
-          v-for="company in companies.companies"
+          v-for="(company, index) in companies.companies"
           :key="company.id"
           :class="{
-          'first-item': company.id === 1
-        }"
-          @click="selectCompany(company)"
+            'first-item': company.id === 1,
+            'active': activeItemIndex === index,
+            'hovered': hoveredItemIndex === index,
+            'animated-item': true
+          }"
+          :style="{ '--animation-delay': `${index * 0.05}s` }"
+          @click="selectCompany(company, index)"
+          @touchend="handleTouchEnd(company, index)"
       >
         <div class="region-item">
-          <span class="region-number">{{ company.id }}.</span>
-          <span class="region-name">{{ company.name }}</span>
+          <div class="region-content">
+            <span class="region-number">{{ company.id }}.</span>
+            <span class="region-name">{{ company.name }}</span>
+          </div>
           <div class="logo-container">
             <img :src="getCompanyLogoSrc(company)" :alt="company.name" class="region-logo" />
           </div>
@@ -123,11 +168,14 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 /* Variables para reutilización */
-$color-bg-light: #ebebeb;
-$color-bg-dark: #595758;
-$color-border: #ddd;
-$color-active: #aedae7;
-$color-hover: #e0e0e0;
+$color-bg-light: #f5f5f5;
+$color-bg-dark: #212b36;
+$color-border: #e0e0e0;
+$color-active: #ff3d3d;
+$color-hover: #f8f8f8;
+$color-text: #333;
+$color-accent: #e74c3c;
+$transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
 
 /* Mixins para reutilización */
 @mixin flex-center {
@@ -142,56 +190,115 @@ $color-hover: #e0e0e0;
     width: 0;
     height: 0;
     opacity: 0.8;
-    box-shadow: 0 0 0 0 rgba(74, 178, 222, 0.7);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
   }
 
   70% {
     width: 250px;
     height: 250px;
     opacity: 0;
-    box-shadow: 0 0 0 45px rgba(74, 178, 222, 0);
+    box-shadow: 0 0 0 45px rgba(231, 76, 60, 0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
 .sidebar {
-  background-color: #d7d7d7;
+  background-color: $color-bg-light;
   overflow-y: auto;
   border-right: 1px solid $color-border;
   width: 100%;
-  @include flex-center;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid $color-border;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    color: $color-bg-dark;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+}
+
+.sidebar-instructions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+
+  .instruction-icon {
+    color: $color-accent;
+    animation: pulse 2s infinite;
+  }
+
+  p {
+    margin: 0;
+  }
 }
 
 .region-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  width: 80%;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  padding: 1rem 0;
 
   li {
+    position: relative;
+    opacity: 0;
+    animation: fadeInLeft 0.5s forwards;
+    animation-delay: var(--animation-delay);
+
     &.active .region-item {
-      background-color: $color-active;
-      font-weight: bold;
-      transition: all 0.3s ease;
+      background-color: rgba(231, 76, 60, 0.1);
       transform: translateX(10px);
-      box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
-    }
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid $color-accent;
 
-    &.disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-
-      .region-item {
-        cursor: not-allowed;
+      .region-name {
+        color: $color-accent;
+        font-weight: 600;
       }
     }
 
-    &.return-item, &.first-item {
-      position: relative;
-      overflow: hidden;
+    &.hovered .hover-overlay {
+      opacity: 1;
+      visibility: visible;
     }
   }
 }
@@ -199,53 +306,111 @@ $color-hover: #e0e0e0;
 .region-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border-bottom: 1px solid $color-border;
-  background-color: $color-bg-light;
+  background-color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s $transition-bezier;
   position: relative;
   overflow: hidden;
+  padding: 0.8rem 1rem;
+  margin: 0 1rem 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 
   &:hover {
     background-color: $color-hover;
+    transform: translateX(5px);
+  }
+
+  .region-content {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex: 1;
+    max-width: calc(100% - 90px);
   }
 
   .region-number {
     font-weight: bold;
+    color: $color-accent;
+    font-size: 1.1rem;
+    min-width: 25px;
   }
 
   .region-name {
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: $color-text;
+    transition: color 0.3s ease;
+    font-weight: 500;
   }
 
   .logo-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
+    height: 50px;
+    width: 80px;
     background-color: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
 
   .region-logo {
-    height: 100%;
-    width: auto;
+    max-height: 90%;
+    max-width: 90%;
     object-fit: contain;
     display: block;
-    padding: 2px;
-    background-color: white;
+    transition: transform 0.3s ease;
   }
 
-  &.return {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
+  &:hover .region-logo {
+    transform: scale(1.05);
+  }
+}
+
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 255, 255, 0.8)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.view-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: $color-accent;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1);
   }
 
-  .return-text, .return-arrow {
-    font-weight: bold;
+  svg {
+    stroke: white;
   }
 }
 
@@ -265,48 +430,36 @@ $color-hover: #e0e0e0;
   animation: ripple 3s ease-out;
 }
 
+/* Adaptar a pantallas táctiles */
+//:global(.touch-device) {
+//  .region-item:hover {
+//    transform: none;
+//    background-color: white;
+//  }
+//
+//  .hover-overlay {
+//    display: none;
+//  }
+//}
+
 /* Responsive styles */
 @media screen and (max-width: 1920px) {
-  .region-list {
-    width: 65%;
-  }
-
   .region-item {
-    padding: 5px 15px;
+    padding: 0.6rem 0.8rem;
     height: 55px;
 
     .region-number {
-      margin-right: 12px;
+      margin-right: 8px;
       font-size: 1rem;
     }
 
     .region-name {
       font-size: 0.9rem;
-      margin-right: 50px;
     }
 
     .logo-container {
-      height: 55px;
-      width: 95px;
-    }
-
-    .region-logo {
-      max-height: 100%;
-      max-width: 95px;
-    }
-
-    &.return {
-      padding: 16px 20px;
-    }
-
-    .return-text {
-      font-size: 1.3rem;
-      margin: 0 5px 5px 0;
-    }
-
-    .return-arrow {
-      font-size: 1.4rem;
-      margin: 6px 5px 5px 0;
+      height: 45px;
+      width: 75px;
     }
   }
 
@@ -315,30 +468,60 @@ $color-hover: #e0e0e0;
       width: 0;
       height: 0;
       opacity: 0.8;
-      box-shadow: 0 0 0 0 rgba(74, 178, 222, 0.7);
     }
 
     70% {
       width: 250px;
       height: 250px;
       opacity: 0;
-      box-shadow: 0 0 0 45px rgba(74, 178, 222, 0);
     }
   }
 }
 
 @media screen and (min-width: 1921px) and (max-width: 2560px) {
-  .region-list {
-    width: 75%;
-  }
-
   .region-item {
-    padding: 10px 20px;
+    padding: 0.8rem 1rem;
     height: 70px;
 
     .region-number {
-      margin-right: 20px;
-      font-size: 1.6rem;
+      margin-right: 16px;
+      font-size: 1.3rem;
+    }
+
+    .region-name {
+      font-size: 1.1rem;
+    }
+
+    .logo-container {
+      height: 60px;
+      width: 100px;
+    }
+  }
+
+  @keyframes ripple {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 0.8;
+    }
+
+    70% {
+      width: 320px;
+      height: 320px;
+      opacity: 0;
+    }
+  }
+}
+
+@media screen and (min-width: 2561px) {
+  .region-item {
+    padding: 1rem 1.5rem;
+    height: 90px;
+    margin: 0 1.5rem 0.8rem;
+
+    .region-number {
+      margin-right: 24px;
+      font-size: 1.8rem;
     }
 
     .region-name {
@@ -346,87 +529,20 @@ $color-hover: #e0e0e0;
     }
 
     .logo-container {
-      height: 70px;
-      width: 110px;
-    }
-
-    .region-logo {
-      max-height: 100%;
-      max-width: 110px;
-    }
-
-    &.return {
-      padding: 18px 22px;
-    }
-
-    .return-text {
-      font-size: 2rem;
-      margin: 0 5px 5px 0;
-    }
-
-    .return-arrow {
-      font-size: 2.5rem;
-      margin: 10px 5px 5px 0;
-    }
-  }
-
-  @keyframes ripple {
-    0% {
-      width: 0;
-      height: 0;
-      opacity: 0.8;
-      box-shadow: 0 0 0 0 rgba(74, 178, 222, 0.7);
-    }
-
-    70% {
-      width: 320px;
-      height: 320px;
-      opacity: 0;
-      box-shadow: 0 0 0 60px rgba(74, 178, 222, 0);
-    }
-  }
-}
-
-@media screen and (min-width: 2561px) {
-  .region-list {
-    width: 65%;
-  }
-
-  .region-item {
-    padding: 20px 125px 20px 50px;
-    height: 100px;
-
-    .region-number {
-      margin-right: 30px;
-      font-size: 2.2rem;
-    }
-
-    .region-name {
-      font-size: 1.9rem;
-    }
-
-    .logo-container {
-      height: 100px;
+      height: 80px;
       width: 120px;
     }
+  }
 
-    .region-logo {
-      max-height: 100%;
-      max-width: 120px;
+  .sidebar-header {
+    padding: 2rem;
+
+    h2 {
+      font-size: 2rem;
     }
 
-    &.return {
-      padding: 20px 25px;
-    }
-
-    .return-text {
-      font-size: 3rem;
-      margin: 0 5px 5px 0;
-    }
-
-    .return-arrow {
-      font-size: 3rem;
-      margin: 14px 5px 5px 0;
+    .sidebar-instructions p {
+      font-size: 1.2rem;
     }
   }
 
@@ -435,14 +551,12 @@ $color-hover: #e0e0e0;
       width: 0;
       height: 0;
       opacity: 0.8;
-      box-shadow: 0 0 0 0 rgba(74, 178, 222, 0.7);
     }
 
     70% {
       width: 400px;
       height: 400px;
       opacity: 0;
-      box-shadow: 0 0 0 70px rgba(74, 178, 222, 0);
     }
   }
 }

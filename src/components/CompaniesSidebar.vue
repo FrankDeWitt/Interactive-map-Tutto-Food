@@ -226,9 +226,10 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
 
 .sidebar {
   background-color: $color-bg-light;
-  overflow-y: auto;
+  overflow: hidden;
   border-right: 1px solid $color-border;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   box-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.03);
@@ -240,13 +241,14 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
   border-bottom: 1px solid $color-border;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
 
-  h2 {
-    margin: 0 0 0.5rem 0;
-    color: $color-bg-dark;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
+.sidebar-header h2 {
+  margin: 0 0 0.5rem 0;
+  color: $color-bg-dark;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .sidebar-instructions {
@@ -257,15 +259,15 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
   margin-top: 0.5rem;
   color: #666;
   font-size: 0.9rem;
+}
 
-  .instruction-icon {
-    color: $color-accent;
-    animation: pulse 2s infinite;
-  }
+.instruction-icon {
+  color: $color-accent;
+  animation: pulse 2s infinite;
+}
 
-  p {
-    margin: 0;
-  }
+.sidebar-instructions p {
+  margin: 0;
 }
 
 .region-list {
@@ -273,34 +275,39 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
   padding: 0;
   margin: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 110px);
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
+  flex: 1;
+}
 
-  li {
-    position: relative;
-    opacity: 0;
-    animation: fadeInLeft 0.5s forwards;
-    animation-delay: var(--animation-delay);
+.region-list li {
+  position: relative;
+  opacity: 0;
+  animation: fadeInLeft 0.5s forwards;
+  animation-delay: var(--animation-delay);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding: 0.45rem 0;
+}
 
-    &.active .region-item {
-      background-color: rgba(231, 76, 60, 0.1);
-      transform: translateX(10px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      border-left: 4px solid $color-accent;
+.region-list li.active .region-item {
+  background-color: rgba(231, 76, 60, 0.1);
+  transform: translateX(10px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid $color-accent;
+}
 
-      .region-name {
-        color: $color-accent;
-        font-weight: 600;
-      }
-    }
+.region-list li.active .region-item .region-name {
+  color: $color-accent;
+  font-weight: 600;
+}
 
-    &.hovered .hover-overlay {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
+.region-list li.hovered .hover-overlay {
+  opacity: 1;
+  visibility: visible;
 }
 
 .region-item {
@@ -313,105 +320,66 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
   transition: all 0.3s $transition-bezier;
   position: relative;
   overflow: hidden;
-  padding: 0.8rem 1rem;
-  margin: 0 1rem 0.5rem;
+  padding: 0.4rem 0.6rem;
+  margin: 0 0.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-
-  &:hover {
-    background-color: $color-hover;
-    transform: translateX(5px);
-  }
-
-  .region-content {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    flex: 1;
-    max-width: calc(100% - 90px);
-  }
-
-  .region-number {
-    font-weight: bold;
-    color: $color-accent;
-    font-size: 1.1rem;
-    min-width: 25px;
-  }
-
-  .region-name {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: $color-text;
-    transition: color 0.3s ease;
-    font-weight: 500;
-  }
-
-  .logo-container {
-    display: flex;
-    align-items: center;
-    background-color: #ededed;
-    justify-content: center;
-    height: 50px;
-    width: 80px;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-
-  .region-logo {
-    max-height: 90%;
-    max-width: 90%;
-    object-fit: contain;
-    display: block;
-    transition: transform 0.3s ease;
-  }
-
-  &:hover .region-logo {
-    transform: scale(1.05);
-  }
+  flex: 1;
+  min-height: 0;
 }
 
-.hover-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0.95),
-          rgba(255, 255, 255, 0.8)
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
+.region-item:hover {
+  background-color: $color-hover;
+  transform: translateX(5px);
 }
 
-.view-details {
+.region-content {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: $color-accent;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  flex: 1;
+  max-width: calc(100% - 80px);
+}
+
+.region-number {
+  font-weight: bold;
+  color: $color-accent;
+  font-size: 1rem;
+  min-width: 20px;
+}
+
+.region-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: $color-text;
+  transition: color 0.3s ease;
   font-weight: 500;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transform: scale(0.9);
-  transition: transform 0.2s ease;
+}
 
-  &:hover {
-    transform: scale(1);
-  }
+.logo-container {
+  display: flex;
+  align-items: center;
+  background-color: #ededed;
+  justify-content: center;
+  height: 40px;
+  width: 70px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
 
-  svg {
-    stroke: white;
-  }
+.region-logo {
+  max-height: 90%;
+  max-width: 90%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.region-item:hover .region-logo {
+  transform: scale(1.05);
 }
 
 .ripple-container {
@@ -430,37 +398,41 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: ripple 3s ease-out;
 }
 
-/* Adaptar a pantallas táctiles */
-//:global(.touch-device) {
-//  .region-item:hover {
-//    transform: none;
-//    background-color: white;
-//  }
-//
-//  .hover-overlay {
-//    display: none;
-//  }
-//}
-
 /* Responsive styles */
 @media screen and (max-width: 1920px) {
   .region-item {
-    padding: 0.6rem 0.8rem;
-    height: 55px;
+    padding: 0.3rem 0.5rem;
+    /* Removido: altura fija */
+  }
 
-    .region-number {
-      margin-right: 8px;
-      font-size: 1rem;
-    }
+  .region-content {
+    gap: 0.3rem;
+  }
 
-    .region-name {
-      font-size: 0.9rem;
-    }
+  .region-number {
+    margin-right: 4px;
+    font-size: 0.9rem;
+  }
 
-    .logo-container {
-      height: 45px;
-      width: 75px;
-    }
+  .region-name {
+    font-size: 0.85rem;
+  }
+
+  .logo-container {
+    height: 36px;
+    width: 60px;
+  }
+
+  .sidebar-header {
+    padding: 1rem;
+  }
+
+  .sidebar-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .region-list {
+    height: calc(100% - 90px);
   }
 
   @keyframes ripple {
@@ -480,22 +452,21 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
 
 @media screen and (min-width: 1921px) and (max-width: 2560px) {
   .region-item {
-    padding: 0.8rem 1rem;
-    height: 70px;
+    padding: 0.5rem 0.8rem;
+  }
 
-    .region-number {
-      margin-right: 16px;
-      font-size: 1.3rem;
-    }
+  .region-number {
+    margin-right: 8px;
+    font-size: 1.1rem;
+  }
 
-    .region-name {
-      font-size: 1.1rem;
-    }
+  .region-name {
+    font-size: 1rem;
+  }
 
-    .logo-container {
-      height: 60px;
-      width: 100px;
-    }
+  .logo-container {
+    height: 45px;
+    width: 75px;
   }
 
   @keyframes ripple {
@@ -515,35 +486,37 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
 
 @media screen and (min-width: 2561px) {
   .region-item {
-    padding: 1rem 1.5rem;
-    height: 90px;
-    margin: 0 1.5rem 0.8rem;
+    padding: 0.6rem 1rem;
+  }
 
-    .region-number {
-      margin-right: 24px;
-      font-size: 1.8rem;
-    }
+  .region-number {
+    margin-right: 10px;
+    font-size: 1.3rem;
+  }
 
-    .region-name {
-      font-size: 1.5rem;
-    }
+  .region-name {
+    font-size: 1.8rem;
+  }
 
-    .logo-container {
-      height: 80px;
-      width: 120px;
-    }
+  .logo-container {
+    height: 100px;
+    width: 180px;
   }
 
   .sidebar-header {
-    padding: 2rem;
+    padding: 1.5rem;
+  }
 
-    h2 {
-      font-size: 2rem;
-    }
+  .sidebar-header h2 {
+    font-size: 1.6rem;
+  }
 
-    .sidebar-instructions p {
-      font-size: 1.2rem;
-    }
+  .sidebar-instructions p {
+    font-size: 1rem;
+  }
+
+  .region-list {
+    height: calc(100% - 100px);
   }
 
   @keyframes ripple {

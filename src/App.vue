@@ -89,7 +89,7 @@ onMounted(() => {
 
 <template>
   <div class="app-container">
-    <ScreensaverEnhanced v-if="isScreensaverEnabled" :timeout="60000" />
+<!--    <ScreensaverEnhanced v-if="isScreensaverEnabled" :timeout="60000" />-->
 
     <!-- Transición entre rutas -->
     <transition

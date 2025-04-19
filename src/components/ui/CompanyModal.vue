@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
                           </svg>
                         </div>
                         <div class="info-text">
-                          <a :href="'mailto:' + currentCompany.email">{{ currentCompany.email }}</a>
+                          {{ currentCompany.email }}
                         </div>
                       </div>
                       <div class="info-item" v-if="currentCompany.website">
@@ -245,9 +245,7 @@ onBeforeUnmount(() => {
                           </svg>
                         </div>
                         <div class="info-text">
-                          <a :href="'https://' + currentCompany.website" target="_blank" rel="noopener noreferrer">
                             {{ currentCompany.website }}
-                          </a>
                         </div>
                       </div>
                     </div>

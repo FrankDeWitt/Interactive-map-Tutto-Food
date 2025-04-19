@@ -1,7 +1,9 @@
 <script setup>
-import { computed, inject, onMounted } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import { foodWineCatalog } from '@/data/foods-wines-catalog';
 import { getPreloadedImageSrc, preloadImage } from '@/utils/imageService';
+import { createRippleEffect } from '@/utils/gsapUtils';
+import { gsap } from 'gsap';
 
 const openCompanyModal = inject('openCompanyModal', null);
 
@@ -53,18 +55,73 @@ const normalizePath = (src) => {
   return `/src/assets/logos/${src}`;
 };
 
-const handleCompanyClick = (company) => {
-  if (!company) return;
+const isAnimating = ref(false);
 
-  if (openCompanyModal) {
-    openCompanyModal(company);
-  } else {
-    window.dispatchEvent(new CustomEvent('company-selected', {
-      detail: { company }
-    }));
-  }
+const handleCompanyClick = (company, event) => {
+  if (!company || isAnimating.value) return;
 
-  console.log('Empresa seleccionada:', company.name);
+  // Establecemos que hay una animación en curso
+  isAnimating.value = true;
+
+  // Crear efecto ripple en la posición del clic
+  const clickX = event.clientX;
+  const clickY = event.clientY;
+  createRippleEffect(clickX, clickY, document.body, {
+    color: 'rgba(231, 76, 60, 0.3)',
+    size: 50,
+    scale: 3,
+    duration: 0.5
+  });
+
+  // Capturamos el elemento clickeado
+  const clickedElement = event.currentTarget;
+  // Obtenemos su posición y dimensiones
+  const rect = clickedElement.getBoundingClientRect();
+
+  // Resaltamos el elemento clickeado
+  gsap.to(clickedElement, {
+    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+    boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
+    scale: 1.03,
+    duration: 0.2,
+    ease: 'power1.out'
+  });
+
+  // Creamos un objeto con la información de origen para la animación
+  const origin = {
+    element: clickedElement,
+    x: rect.left,
+    y: rect.top,
+    width: rect.width,
+    height: rect.height,
+    logoSrc: getCompanyLogoSrc(company)
+  };
+
+  // Retrasamos la apertura del modal para que se vea el efecto
+  setTimeout(() => {
+    if (openCompanyModal) {
+      // Pasamos el origen junto con la compañía
+      openCompanyModal(company, origin);
+    } else {
+      window.dispatchEvent(new CustomEvent('company-selected', {
+        detail: { company, origin }
+      }));
+    }
+
+    // Restauramos el estado original del elemento
+    gsap.to(clickedElement, {
+      backgroundColor: 'white',
+      boxShadow: 'none',
+      scale: 1,
+      duration: 0.3,
+      ease: 'power2.out',
+      onComplete: () => {
+        isAnimating.value = false;
+      }
+    });
+
+    console.log('Empresa seleccionada:', company.name);
+  }, 200); // pequeño retraso para ver el efecto
 };
 
 const ensureImagesLoaded = async () => {
@@ -102,7 +159,7 @@ onMounted(async () => {
            'empty': isDivEmpty(position),
            'has-company': getCompanyForPosition(position)
          }]"
-         @click="handleCompanyClick(getCompanyForPosition(position))"
+         @click="(event) => handleCompanyClick(getCompanyForPosition(position), event)"
     >
       <template v-if="!isDivEmpty(position) && getCompanyForPosition(position)">
         <div class="company-content">
@@ -149,6 +206,12 @@ onMounted(async () => {
 
   &.has-company {
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
   }
 }
 

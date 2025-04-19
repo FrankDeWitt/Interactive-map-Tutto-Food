@@ -31,6 +31,7 @@ const catalogData = computed(() => {
 });
 
 // Función que abre el modal con animación GSAP
+// Función que abre el modal con animación GSAP mejorada
 const openCompanyModal = (company, origin) => {
   // Si hay una animación en curso, no hacemos nada
   if (animationInProgress.value) return;
@@ -43,7 +44,16 @@ const openCompanyModal = (company, origin) => {
   transEl.className = 'modal-transition-element';
   transEl.style.position = 'fixed';
   transEl.style.zIndex = '1001';
-  transEl.style.backgroundColor = 'white';
+
+  // Configuramos la apariencia con el fondo semitransparente
+  transEl.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Más transparente
+  transEl.style.backgroundImage = `url(${backgroundImage})`; // Añadimos la imagen de fondo
+  transEl.style.backgroundSize = 'cover';
+  transEl.style.backgroundPosition = 'center';
+  transEl.style.backgroundBlendMode = 'overlay'; // Mezclamos el fondo con el color
+  transEl.style.backgroundRepeat = 'no-repeat';
+  transEl.style.opacity = '0.95'; // Inicialmente menos opaco
+
   transEl.style.borderRadius = '8px';
   transEl.style.overflow = 'hidden';
   transEl.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
@@ -59,6 +69,7 @@ const openCompanyModal = (company, origin) => {
     logoImg.style.maxWidth = '80%';
     logoImg.style.maxHeight = '70%';
     logoImg.style.objectFit = 'contain';
+    logoImg.style.zIndex = '2'; // Aseguramos que el logo esté por encima del fondo
     transEl.appendChild(logoImg);
   }
 
@@ -91,7 +102,9 @@ const openCompanyModal = (company, origin) => {
       top: origin.y,
       left: origin.x,
       width: origin.width,
-      height: origin.height
+      height: origin.height,
+      backgroundSize: '250%', // Empezamos con el fondo más ampliado
+      backgroundPosition: 'center',
     });
 
     // Animamos al tamaño final del modal
@@ -103,6 +116,8 @@ const openCompanyModal = (company, origin) => {
       width: modalWidth,
       height: modalHeight,
       borderRadius: '24px',
+      opacity: 1, // Completamente opaco al final
+      backgroundSize: 'cover', // Ajustamos el tamaño del fondo
       duration: 0.5,
       ease: 'power2.inOut',
       onComplete: () => {
@@ -125,11 +140,12 @@ const openCompanyModal = (company, origin) => {
       const logoElement = transEl.querySelector('img');
       if (logoElement) {
         gsap.fromTo(logoElement,
-            { maxWidth: '80%', maxHeight: '70%' },
+            { maxWidth: '80%', maxHeight: '70%', opacity: 1 },
             {
               maxWidth: '60%',
               maxHeight: '40%',
               top: '30%',
+              opacity: 0.8, // Hacemos que el logo se desvanezca un poco
               duration: 0.5,
               ease: 'power2.inOut'
             }
@@ -145,13 +161,15 @@ const openCompanyModal = (company, origin) => {
       yPercent: -50,
       width: 0,
       height: 0,
-      opacity: 0
+      opacity: 0,
+      backgroundSize: '250%',
     });
 
     gsap.to(transEl, {
       width: modalWidth,
       height: modalHeight,
       opacity: 1,
+      backgroundSize: 'cover',
       duration: 0.4,
       ease: 'power2.out',
       onComplete: () => {
@@ -167,7 +185,6 @@ const openCompanyModal = (company, origin) => {
     });
   }
 };
-
 const closeModal = () => {
   // Si hay una animación en curso, no hacemos nada
   if (animationInProgress.value) return;

@@ -146,7 +146,9 @@ const toggleSection = (section) => {
                 </svg>
               </div>
               <div class="info-text">
-                <a :href="'mailto:' + currentCompany.email">{{ currentCompany.email }}</a>
+                <span>
+                {{ currentCompany.email }}
+                </span>
               </div>
             </div>
             <div class="info-item" v-if="currentCompany?.website">
@@ -158,9 +160,9 @@ const toggleSection = (section) => {
                 </svg>
               </div>
               <div class="info-text">
-                <a :href="'https://' + currentCompany.website" target="_blank" rel="noopener noreferrer">
-                  {{ currentCompany.website }}
-                </a>
+                <span>
+                {{ currentCompany.website }}
+                </span>
               </div>
             </div>
           </div>
@@ -395,16 +397,11 @@ const toggleSection = (section) => {
     color: #000;
     flex: 1;
 
-    a {
+    span {
       color: #e74c3c;
       text-decoration: none;
       font-weight: 500;
       transition: color 0.2s;
-
-      &:hover {
-        color: darken(#e74c3c, 15%);
-        text-decoration: underline;
-      }
     }
   }
 

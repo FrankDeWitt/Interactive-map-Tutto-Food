@@ -93,9 +93,6 @@ onMounted(async () => {
 <template>
   <div class="map-grid">
     <div class="map-grid-container">
-      <!-- Fondo con partículas o efecto visual -->
-      <div class="background-effect"></div>
-
       <div v-for="position in 17" :key="position"
            :class="['grid-item', `div${position}`, {
              'empty': isDivEmpty(position),
@@ -117,12 +114,6 @@ onMounted(async () => {
             <div class="hover-info">
               <span class="company-name">{{ getCompanyForPosition(position).name }}</span>
             </div>
-          </div>
-        </template>
-        <template v-else-if="!isDivEmpty(position)">
-          <span class="empty-position">{{ position }}</span>
-          <div class="empty-slot-indicator">
-            <span>Disponible</span>
           </div>
         </template>
       </div>
@@ -160,18 +151,6 @@ onMounted(async () => {
     height: 100%;
     position: relative;
     z-index: 2;
-  }
-
-  .background-effect {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-    opacity: 0.7;
-    z-index: 1;
-    pointer-events: none;
   }
 }
 

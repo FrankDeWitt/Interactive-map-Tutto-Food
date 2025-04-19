@@ -351,10 +351,10 @@ $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
   .logo-container {
     display: flex;
     align-items: center;
+    background-color: #ededed;
     justify-content: center;
     height: 50px;
     width: 80px;
-    background-color: white;
     border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);

@@ -5,6 +5,7 @@ import CompaniesSidebar from '@/components/CompaniesSidebar.vue';
 import ContentPanel from '@/components/ContentPanel.vue';
 import CompanyModal from '@/components/ui/CompanyModal.vue';
 import { preloadCatalogImages, areCatalogImagesPreloaded } from '@/utils/imageService';
+import { gsap } from 'gsap';
 import loveHeader from '../assets/images/love-header.png';
 
 const props = defineProps({
@@ -27,11 +28,25 @@ const catalogData = computed(() => {
 
 const openCompanyModal = (company) => {
   selectedCompany.value = company;
-  isModalOpen.value = true;
+
+  // Añadir animación GSAP para el efecto de apertura
+  gsap.fromTo(isModalOpen,
+      { value: false },
+      {
+        value: true,
+        duration: 0.1, // Duración corta para que parezca instantáneo
+        ease: "power1.out"
+      }
+  );
 };
 
 const closeModal = () => {
-  isModalOpen.value = false;
+  // Añadir animación GSAP para el cierre
+  gsap.to(isModalOpen, {
+    value: false,
+    duration: 0.1,
+    ease: "power1.in"
+  });
 };
 
 provide('openCompanyModal', openCompanyModal);
@@ -55,9 +70,23 @@ const loadImages = async () => {
       const totalImagesToLoad = catalogData.value.companies.length + (catalogData.value.logo ? 1 : 0);
       let loadedImages = 0;
 
+      // Animación para el progreso de carga
+      gsap.to(loadingProgress, {
+        value: 5, // Comenzamos desde 5% para dar sensación de arranque inmediato
+        duration: 0.5,
+        ease: "power1.in"
+      });
+
       await preloadCatalogImages(catalogData.value, () => {
         loadedImages++;
-        loadingProgress.value = Math.floor((loadedImages / totalImagesToLoad) * 100);
+        const newProgress = Math.floor((loadedImages / totalImagesToLoad) * 100);
+
+        // Animación suave del progreso
+        gsap.to(loadingProgress, {
+          value: newProgress,
+          duration: 0.3,
+          ease: "power1.out"
+        });
       });
     } else {
       await preloadCatalogImages(catalogData.value);
@@ -66,9 +95,30 @@ const loadImages = async () => {
     console.error('Error al cargar imágenes del catálogo:', error);
     loadingError.value = true;
   } finally {
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 300);
+    // Completar el progreso visualmente
+    gsap.to(loadingProgress, {
+      value: 100,
+      duration: 0.4,
+      ease: "power2.out",
+      onComplete: () => {
+        // Animar transición de salida de la pantalla de carga
+        setTimeout(() => {
+          // Animar salida del cargador
+          const loadingOverlay = document.querySelector('.loading-overlay');
+          if (loadingOverlay) {
+            gsap.to(loadingOverlay, {
+              opacity: 0,
+              duration: 0.4,
+              onComplete: () => {
+                isLoading.value = false;
+              }
+            });
+          } else {
+            isLoading.value = false;
+          }
+        }, 300);
+      }
+    });
   }
 };
 
@@ -86,6 +136,21 @@ watch(() => props.catalogIndex, (newIndex) => {
 
 onMounted(() => {
   window.addEventListener('company-selected', handleCompanySelectEvent);
+
+  // Aplicar animación a la barra de progreso cuando se monta
+  const progressBar = document.querySelector('.loading-progress-bar');
+  if (progressBar) {
+    gsap.set(progressBar, { width: '0%' });
+  }
+
+  // Animación para el logo en la pantalla de carga
+  const loadingLogo = document.querySelector('.loading-logo');
+  if (loadingLogo) {
+    gsap.fromTo(loadingLogo,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.7)" }
+    );
+  }
 });
 
 onBeforeUnmount(() => {
@@ -167,7 +232,6 @@ onBeforeUnmount(() => {
   width: 300px;
   height: auto;
   margin-bottom: 30px;
-  animation: pulse 2s infinite;
 }
 
 .loading-progress-container {
@@ -218,21 +282,6 @@ onBeforeUnmount(() => {
 
   &:hover {
     background-color: #2980b9;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
   }
 }
 

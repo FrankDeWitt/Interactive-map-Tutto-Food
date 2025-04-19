@@ -1,14 +1,106 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { gsap } from 'gsap';
 import ScreensaverEnhanced from './components/ScreenSaver.vue';
 
 const isScreensaverEnabled = ref(true);
+const route = useRoute();
+const isTransitioning = ref(false);
+const oldPath = ref(route.path);
+
+// Configurar observador de cambios de ruta
+watch(() => route.path, (newPath, oldPath) => {
+  if (newPath !== oldPath) {
+    // Activar transición
+    isTransitioning.value = true;
+  }
+});
+
+// Controlar animaciones de página
+const onBeforeLeave = (el) => {
+  // Guardar la posición de desplazamiento
+  el.dataset.scrollY = window.scrollY;
+
+  // Congelar la posición para que la animación se vea bien
+  gsap.set(el, {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 1
+  });
+
+  // Animación de salida
+  gsap.to(el, {
+    opacity: 0,
+    x: -30,
+    duration: 0.5,
+    ease: 'power2.inOut'
+  });
+};
+
+const onLeave = (el, done) => {
+  gsap.to(el, {
+    duration: 0.1,
+    onComplete: done
+  });
+};
+
+const onEnter = (el, done) => {
+  // Configurar estado inicial
+  gsap.set(el, {
+    opacity: 0,
+    x: 30
+  });
+
+  // Animación de entrada
+  gsap.to(el, {
+    opacity: 1,
+    x: 0,
+    duration: 0.5,
+    ease: 'power2.out',
+    onComplete: () => {
+      isTransitioning.value = false;
+      done();
+    }
+  });
+};
+
+const onAfterEnter = (el) => {
+  // Restablecer estilos
+  gsap.set(el, {
+    clearProps: 'all'
+  });
+};
+
+onMounted(() => {
+  // Configurar la animación inicial de entrada
+  const mainContent = document.querySelector('.page-content');
+  if (mainContent) {
+    gsap.fromTo(mainContent,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
+    );
+  }
+});
 </script>
 
 <template>
   <div class="app-container">
-    <ScreensaverEnhanced v-if="isScreensaverEnabled" :timeout="6000" />
-    <router-view />
+    <ScreensaverEnhanced v-if="isScreensaverEnabled" :timeout="60000" />
+
+    <!-- Transición entre rutas -->
+    <transition
+        @before-leave="onBeforeLeave"
+        @leave="onLeave"
+        @enter="onEnter"
+        @after-enter="onAfterEnter"
+        :css="false"
+    >
+      <router-view class="page-content" :key="route.path" />
+    </transition>
   </div>
 </template>
 
@@ -35,6 +127,12 @@ body {
   width: 100%;
   position: relative;
   overflow: hidden;
+}
+
+.page-content {
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 /* Personalización de la barra de desplazamiento */

@@ -3,31 +3,50 @@ import { useRouter } from 'vue-router';
 import { foodWineCatalog } from '@/data/foods-wines-catalog';
 import { ref, onMounted } from 'vue';
 import loveHeader from '@/assets/images/love-header.png';
+import { gsap } from 'gsap';
 
 const router = useRouter();
-const isAnimating = ref(false);
 const isLoaded = ref(false);
 
 const navigateTo = (path) => {
-  if (isAnimating.value) return;
-
-  isAnimating.value = true;
-
-  // Añade una clase para animar la salida
-  document.querySelector('.home-container').classList.add('exit-animation');
-
-  // Espera a que termine la animación antes de navegar
-  setTimeout(() => {
-    router.push(path);
-    isAnimating.value = false;
-  }, 600);
+  // Simplemente navegamos sin animación manual
+  // La transición ahora la maneja el componente App
+  router.push(path);
 };
 
 onMounted(() => {
-  // Simular carga inicial con animación
-  setTimeout(() => {
-    isLoaded.value = true;
-  }, 300);
+  // Simular carga inicial con animación GSAP en lugar de clases CSS
+  gsap.to(isLoaded, {
+    value: true,
+    duration: 0.3,
+    onUpdate: () => {
+      // Este callback se ejecuta cada vez que isLoaded cambia
+      // Estamos usando isLoaded como un disparador para las clases CSS
+    }
+  });
+
+  // Mejorar la animación de entrada usando GSAP
+  const headerEl = document.querySelector('.header');
+  const buttonsEl = document.querySelector('.catalog-buttons');
+  const footerEl = document.querySelector('.footer-note');
+
+  // Timeline para animar los elementos secuencialmente
+  const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+  tl.fromTo(headerEl,
+      { opacity: 0, y: -30 },
+      { opacity: 1, y: 0, duration: 0.8 }
+  )
+      .fromTo(buttonsEl,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8 },
+          "-=0.4" // Comenzar un poco antes de que termine la animación anterior
+      )
+      .fromTo(footerEl,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.6 },
+          "-=0.2"
+      );
 
   // Efecto de interactividad para los botones
   const buttons = document.querySelectorAll('.catalog-button');
@@ -108,12 +127,6 @@ onMounted(() => {
   background-color: #f8f9fa;
   position: relative;
   overflow: hidden;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.home-container.exit-animation {
-  transform: scale(0.95) translateY(-30px);
-  opacity: 0;
 }
 
 .background-elements {
@@ -164,14 +177,6 @@ onMounted(() => {
   margin-bottom: 3rem;
   position: relative;
   z-index: 1;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.header.loaded {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .logo-image {
@@ -200,14 +205,6 @@ onMounted(() => {
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.catalog-buttons.loaded {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .catalog-button {
@@ -225,9 +222,11 @@ onMounted(() => {
   transform: translateY(20px);
   animation: fadeInUp 0.5s forwards;
   animation-delay: var(--delay);
+  transition: all 0.3s ease;
 }
 
-.catalog-button:hover {
+.catalog-button:hover,
+.catalog-button:active {
   transform: translateY(-10px) scale(1.03);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -249,7 +248,8 @@ onMounted(() => {
   z-index: 1;
 }
 
-.catalog-button:hover .btn-background {
+.catalog-button:hover .btn-background,
+.catalog-button:active .btn-background {
   opacity: 1;
 }
 
@@ -276,11 +276,13 @@ onMounted(() => {
   transition: transform 0.3s ease;
 }
 
-.catalog-button:hover h2 {
+.catalog-button:hover h2,
+.catalog-button:active h2 {
   transform: scale(1.05);
 }
 
-.catalog-button:hover p {
+.catalog-button:hover p,
+.catalog-button:active p {
   transform: scale(1.05);
 }
 
@@ -294,7 +296,8 @@ onMounted(() => {
   color: #dc3545;
 }
 
-.catalog-button:hover .icon-arrow {
+.catalog-button:hover .icon-arrow,
+.catalog-button:active .icon-arrow {
   opacity: 1;
   transform: translateX(0);
 }
@@ -304,8 +307,6 @@ onMounted(() => {
   text-align: center;
   color: #adb5bd;
   font-weight: 500;
-  opacity: 0;
-  animation: fadeIn 1s 1s forwards;
   position: relative;
   z-index: 1;
 }
@@ -318,15 +319,6 @@ onMounted(() => {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 

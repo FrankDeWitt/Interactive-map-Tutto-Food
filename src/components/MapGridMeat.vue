@@ -97,7 +97,6 @@ onMounted(async () => {
            :class="['grid-item', `div${position}`, {
              'empty': isDivEmpty(position),
              'has-company': getCompanyForPosition(position),
-             'pulse-animation': getCompanyForPosition(position)
            }]"
            @click="handleCompanyClick(getCompanyForPosition(position))"
       >
@@ -111,9 +110,6 @@ onMounted(async () => {
                   class="company-logo"
               />
             </div>
-            <div class="hover-info">
-              <span class="company-name">{{ getCompanyForPosition(position).name }}</span>
-            </div>
           </div>
         </template>
       </div>
@@ -122,21 +118,6 @@ onMounted(async () => {
 </template>
 
 <style scoped lang="scss">
-
-@keyframes pulse {
-  0% {
-    opacity: 0;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.2);
-  }
-}
-
 .map-grid {
   position: relative;
   overflow: hidden;
@@ -165,43 +146,9 @@ onMounted(async () => {
   text-align: center;
   overflow: hidden;
   position: relative;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &.has-company {
     cursor: pointer;
-
-    &:hover {
-      transform: scale(1.05) translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-
-      .hover-info {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .company-logo {
-        transform: scale(1.1);
-      }
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
-  }
-
-  &.pulse-animation {
-    &::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: inherit;
-      opacity: 0;
-      z-index: 0;
-      animation: pulse 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
-    }
   }
 }
 
@@ -232,21 +179,6 @@ onMounted(async () => {
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-.hover-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px;
-  opacity: 0;
-  transform: translateY(100%);
-  transition: all 0.3s ease;
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-
 .empty-slot-indicator {
   position: absolute;
   top: 50%;
@@ -258,9 +190,6 @@ onMounted(async () => {
   transition: opacity 0.3s ease;
 }
 
-.grid-item:not(.has-company):not(.empty):hover .empty-slot-indicator {
-  opacity: 1;
-}
 
 .empty-position {
   font-size: 0.9rem;

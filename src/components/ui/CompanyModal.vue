@@ -284,7 +284,6 @@ onBeforeUnmount(() => {
                     </div>
                   </div>
                 </div>
-
                 <div class="info-item stand" v-if="currentCompany.stand">
                   <div class="stand-text">STAND {{ currentCompany.stand }}</div>
                 </div>
@@ -679,7 +678,6 @@ onBeforeUnmount(() => {
       font-weight: bold;
       color: #e74c3c;
       text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      animation: pulse 2s infinite;
     }
   }
 }

@@ -1,5 +1,6 @@
 import './assets/css/main.css'
 import './assets/css/transitions.scss'
+import './assets/css/gsap-animations.scss'
 import router from './router'
 
 import { createApp } from 'vue'

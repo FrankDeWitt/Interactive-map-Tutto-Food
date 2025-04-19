@@ -1,0 +1,98 @@
+/* Estilos CSS para animaciones GSAP */
+
+/* Clase para animar elementos con efecto de entrada con fade y movimiento */
+.gsap-fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.gsap-fade-down {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.gsap-fade-left {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.gsap-fade-right {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.gsap-fade {
+  opacity: 0;
+}
+
+.gsap-zoom-in {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.gsap-zoom-out {
+  opacity: 0;
+  transform: scale(1.2);
+}
+
+/* Clases para controlar la transición del modal */
+.modal-transition-element {
+  position: fixed;
+  z-index: 1001;
+  pointer-events: none;
+  background-color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  /* Asegurar la superposición correcta en pantallas táctiles */
+  touch-action: none;
+  will-change: transform;
+}
+
+/* Clase para marca que un elemento está siendo animado */
+.is-animating {
+  pointer-events: none;
+}
+
+/* Mejorar rendimiento de animaciones */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Animación para enfatizar elementos seleccionados */
+@keyframes pulse-highlight {
+  0% {
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+    transform: scale(1);
+  }
+}
+
+.pulse-highlight {
+  animation: pulse-highlight 1.5s infinite;
+}
+
+/* Estilo para animación de ripple */
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}

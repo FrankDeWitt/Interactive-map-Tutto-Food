@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { gsap } from 'gsap';
 
 const props = defineProps({
   isOpen: {
@@ -25,32 +26,118 @@ watch(() => props.isOpen, (newValue) => {
   isModalClosing.value = false;
 
   if (newValue) {
-    setTimeout(() => {
-      modalVisible.value = true;
+    // El modal ya está visible debido a la animación en CatalogView
+    modalVisible.value = true;
 
-      setTimeout(() => {
-        contentVisible.value = true;
-      }, 400);
-    }, 50);
+    // Animamos la aparición del contenido
+    gsap.delayedCall(0.2, () => {
+      contentVisible.value = true;
+
+      // Animamos los elementos decorativos si están habilitados
+      if (props.withDecorations) {
+        const decorations = document.querySelectorAll('.modal-decoration');
+        gsap.fromTo(decorations,
+            {
+              opacity: 0,
+              x: (i) => {
+                // Diferentes direcciones según la posición
+                if (i % 2 === 0) return -50;
+                return 50;
+              },
+              y: (i) => {
+                // Diferentes direcciones según la posición
+                if (i < 2) return -50;
+                return 50;
+              }
+            },
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              duration: 0.7,
+              stagger: 0.1,
+              ease: "power3.out"
+            }
+        );
+      }
+
+      // Animamos el botón de cierre
+      const closeButton = document.querySelector('.close-button');
+      if (closeButton) {
+        gsap.fromTo(closeButton,
+            { opacity: 0, rotation: -90, scale: 0.8 },
+            {
+              opacity: 1,
+              rotation: 0,
+              scale: 1,
+              duration: 0.5,
+              delay: 0.2,
+              ease: "back.out(1.7)"
+            }
+        );
+      }
+
+      // Animamos el contenido interno
+      const modalInner = document.querySelector('.modal-inner');
+      if (modalInner) {
+        gsap.fromTo(modalInner,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              delay: 0.1,
+              ease: "power2.out"
+            }
+        );
+      }
+    });
   } else {
+    // Animación de cierre
+    isModalClosing.value = true;
     contentVisible.value = false;
 
-    setTimeout(() => {
+    // Animamos la salida del contenido
+    const modalInner = document.querySelector('.modal-inner');
+    if (modalInner) {
+      gsap.to(modalInner, {
+        opacity: 0,
+        y: -20,
+        duration: 0.3,
+        ease: "power2.in"
+      });
+    }
+
+    // Esperamos un poco y cerramos el modal
+    gsap.delayedCall(0.3, () => {
       modalVisible.value = false;
-    }, 200);
+      setTimeout(() => {
+        emit('close');
+      }, 300);
+    });
   }
 }, { immediate: true });
 
 const handleClose = () => {
-  isModalClosing.value = true;
-  contentVisible.value = false;
+  if (isModalClosing.value) return;
 
-  setTimeout(() => {
-    modalVisible.value = false;
-    setTimeout(() => {
-      emit('close');
-    }, 200);
-  }, 300);
+  isModalClosing.value = true;
+
+  // Animar cierre con GSAP
+  gsap.to('.modal-content', {
+    scale: 0.9,
+    opacity: 0,
+    duration: 0.3,
+    ease: "power2.in",
+    onComplete: () => {
+      contentVisible.value = false;
+
+      gsap.delayedCall(0.1, () => {
+        modalVisible.value = false;
+        emit('close');
+      });
+    }
+  });
 };
 
 const handleKeyDown = (event) => {
@@ -70,49 +157,35 @@ onBeforeUnmount(() => {
 
 <template>
   <teleport to="body">
-    <transition name="modal-fade">
-      <div v-if="isOpen"
-           class="modal-overlay"
-           :class="{ 'visible': modalVisible, 'closing': isModalClosing }"
-           @click="handleClose">
-        <div
-            class="modal-content"
-            :class="{ 'content-visible': contentVisible }"
-            :style="backgroundImage ? `background-image: url(${backgroundImage})` : ''"
-            @click.stop
-        >
-          <!-- Decoración visual opcional -->
-          <template v-if="withDecorations">
-            <div class="modal-decoration top-left"></div>
-            <div class="modal-decoration top-right"></div>
-            <div class="modal-decoration bottom-left"></div>
-            <div class="modal-decoration bottom-right"></div>
-          </template>
+    <div v-if="isOpen"
+         class="modal-overlay"
+         :class="{ 'visible': modalVisible, 'closing': isModalClosing }"
+         @click="handleClose">
+      <div
+          class="modal-content"
+          :class="{ 'content-visible': contentVisible }"
+          :style="backgroundImage ? `background-image: url(${backgroundImage})` : ''"
+          @click.stop
+      >
+        <!-- Decoración visual opcional -->
+        <template v-if="withDecorations">
+          <div class="modal-decoration top-left"></div>
+          <div class="modal-decoration top-right"></div>
+          <div class="modal-decoration bottom-left"></div>
+          <div class="modal-decoration bottom-right"></div>
+        </template>
 
-          <button class="close-button" @click="handleClose">&times;</button>
+        <button class="close-button" @click="handleClose">&times;</button>
 
-          <div class="modal-inner">
-            <slot></slot>
-          </div>
+        <div class="modal-inner" :class="{ 'visible': contentVisible }">
+          <slot></slot>
         </div>
       </div>
-    </transition>
+    </div>
   </teleport>
 </template>
 
 <style scoped lang="scss">
-// Animaciones
-@keyframes fadeInRotate {
-  from {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: rotate(0) scale(1);
-  }
-}
-
 // Estructura principal del modal
 .modal-overlay {
   position: fixed;
@@ -153,12 +226,11 @@ onBeforeUnmount(() => {
   justify-content: center;
   width: 50%;
   height: 75%;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  transform: scale(1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &.content-visible {
-    opacity: 1;
     transform: scale(1);
   }
 }
@@ -170,40 +242,30 @@ onBeforeUnmount(() => {
   height: 100px;
   background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
   opacity: 0;
-  transition: all 0.5s ease;
 
   &.top-left {
     top: 0;
     left: 0;
     border-bottom-right-radius: 100%;
-    transform: translate(-50%, -50%);
   }
 
   &.top-right {
     top: 0;
     right: 0;
     border-bottom-left-radius: 100%;
-    transform: translate(50%, -50%);
   }
 
   &.bottom-left {
     bottom: 0;
     left: 0;
     border-top-right-radius: 100%;
-    transform: translate(-50%, 50%);
   }
 
   &.bottom-right {
     bottom: 0;
     right: 0;
     border-top-left-radius: 100%;
-    transform: translate(50%, 50%);
   }
-}
-
-.content-visible .modal-decoration {
-  opacity: 1;
-  transform: translate(0, 0);
 }
 
 // Contenedor interior del modal
@@ -211,6 +273,11 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   overflow: auto;
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
+  }
 }
 
 // Botón de cierre
@@ -232,32 +299,11 @@ onBeforeUnmount(() => {
   z-index: 10;
   transition: background-color 0.3s, transform 0.2s;
   opacity: 0;
-  animation: fadeInRotate 0.5s 0.2s forwards;
 
   &:hover {
     background: rgba(0, 0, 0, 0.7);
     transform: scale(1.1) rotate(90deg);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-}
-
-// Transiciones para el modal
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  .modal-content {
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-}
-
-.modal-fade-enter-from,
-.modal-fade-leave-to {
-  opacity: 0;
-
-  .modal-content {
-    opacity: 0;
-    transform: scale(0.85) translateY(30px);
   }
 }
 

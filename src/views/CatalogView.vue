@@ -23,35 +23,163 @@ const selectedCompany = ref(null);
 const loadingError = ref(false);
 const isModalOpen = ref(false);
 const currentCatalogId = ref(null);
+const animationInProgress = ref(false);
+const transitionElement = ref(null);
 
 const catalogData = computed(() => {
   return foodWineCatalog[props.catalogIndex];
 });
 
-const openBaseModal = (company) => {
-  selectedCompany.value = company;
+// Función que abre el modal con animación GSAP
+const openCompanyModal = (company, origin) => {
+  // Si hay una animación en curso, no hacemos nada
+  if (animationInProgress.value) return;
 
-  // Añadir animación GSAP para el efecto de apertura
-  gsap.fromTo(isModalOpen,
-      { value: false },
-      {
-        value: true,
-        duration: 0.1, // Duración corta para que parezca instantáneo
-        ease: "power1.out"
+  selectedCompany.value = company;
+  animationInProgress.value = true;
+
+  // Creamos un elemento de transición para la animación
+  const transEl = document.createElement('div');
+  transEl.className = 'modal-transition-element';
+  transEl.style.position = 'fixed';
+  transEl.style.zIndex = '1001';
+  transEl.style.backgroundColor = 'white';
+  transEl.style.borderRadius = '8px';
+  transEl.style.overflow = 'hidden';
+  transEl.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+
+  // Añadimos el logo si existe un origen definido
+  if (origin && origin.logoSrc) {
+    const logoImg = document.createElement('img');
+    logoImg.src = origin.logoSrc;
+    logoImg.style.position = 'absolute';
+    logoImg.style.top = '50%';
+    logoImg.style.left = '50%';
+    logoImg.style.transform = 'translate(-50%, -50%)';
+    logoImg.style.maxWidth = '80%';
+    logoImg.style.maxHeight = '70%';
+    logoImg.style.objectFit = 'contain';
+    transEl.appendChild(logoImg);
+  }
+
+  document.body.appendChild(transEl);
+  transitionElement.value = transEl;
+
+  // Calculamos las dimensiones finales del modal (dependiendo de la resolución)
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  let modalWidth, modalHeight;
+
+  if (viewportWidth <= 1200) {
+    modalWidth = '90vw';
+    modalHeight = '80vh';
+  } else if (viewportWidth <= 1920) {
+    modalWidth = '70vw';
+    modalHeight = '85vh';
+  } else if (viewportWidth <= 2560) {
+    modalWidth = '60vw';
+    modalHeight = '75vh';
+  } else {
+    modalWidth = '50vw';
+    modalHeight = '70vh';
+  }
+
+  // Primera parte de la animación - desde el origen hasta el centro de la pantalla
+  if (origin) {
+    // Configuramos la posición y tamaño iniciales
+    gsap.set(transEl, {
+      top: origin.y,
+      left: origin.x,
+      width: origin.width,
+      height: origin.height
+    });
+
+    // Animamos al tamaño final del modal
+    gsap.to(transEl, {
+      top: '50%',
+      left: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      width: modalWidth,
+      height: modalHeight,
+      borderRadius: '24px',
+      duration: 0.5,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        // Mostrar el modal real cuando la animación termina
+        isModalOpen.value = true;
+
+        // Eliminar el elemento de transición después de un breve retraso
+        setTimeout(() => {
+          if (transitionElement.value) {
+            document.body.removeChild(transitionElement.value);
+            transitionElement.value = null;
+          }
+          animationInProgress.value = false;
+        }, 100);
       }
-  );
+    });
+
+    // Animar el contenido dentro del elemento de transición
+    if (origin.logoSrc) {
+      const logoElement = transEl.querySelector('img');
+      if (logoElement) {
+        gsap.fromTo(logoElement,
+            { maxWidth: '80%', maxHeight: '70%' },
+            {
+              maxWidth: '60%',
+              maxHeight: '40%',
+              top: '30%',
+              duration: 0.5,
+              ease: 'power2.inOut'
+            }
+        );
+      }
+    }
+  } else {
+    // Si no hay origen (por ejemplo, desde la barra lateral), hacemos una animación simple
+    gsap.set(transEl, {
+      top: '50%',
+      left: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      width: 0,
+      height: 0,
+      opacity: 0
+    });
+
+    gsap.to(transEl, {
+      width: modalWidth,
+      height: modalHeight,
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power2.out',
+      onComplete: () => {
+        isModalOpen.value = true;
+        setTimeout(() => {
+          if (transitionElement.value) {
+            document.body.removeChild(transitionElement.value);
+            transitionElement.value = null;
+          }
+          animationInProgress.value = false;
+        }, 100);
+      }
+    });
+  }
 };
 
 const closeModal = () => {
-  // Añadir animación GSAP para el cierre
-  gsap.to(isModalOpen, {
-    value: false,
-    duration: 0.1,
-    ease: "power1.in"
-  });
+  // Si hay una animación en curso, no hacemos nada
+  if (animationInProgress.value) return;
+
+  isModalOpen.value = false;
+
+  // Podríamos también hacer una animación inversa al cerrar
+  // pero lo dejamos simple por ahora
 };
 
-provide('openBaseModal', openBaseModal);
+// Hacer disponible la función openCompanyModal para los componentes hijos
+provide('openCompanyModal', openCompanyModal);
 
 const loadImages = async () => {
   // Si el catálogo actual ya está en proceso de carga, no iniciar otra carga
@@ -126,7 +254,7 @@ const loadImages = async () => {
 
 const handleCompanySelectEvent = (event) => {
   if (event.detail && event.detail.company) {
-    openBaseModal(event.detail.company);
+    openCompanyModal(event.detail.company, event.detail.origin);
   }
 };
 
@@ -157,6 +285,12 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('company-selected', handleCompanySelectEvent);
+
+  // Limpiar el elemento de transición si existe
+  if (transitionElement.value) {
+    document.body.removeChild(transitionElement.value);
+    transitionElement.value = null;
+  }
 });
 </script>
 
@@ -183,7 +317,7 @@ onBeforeUnmount(() => {
     <template v-else>
       <CompaniesSidebar
           :companies="catalogData"
-          @select-company="openBaseModal"
+          @select-company="openCompanyModal"
       />
 
       <ContentPanel />
@@ -193,7 +327,7 @@ onBeforeUnmount(() => {
           :is-open="isModalOpen"
           @close="closeModal"
       >
-        <CompanyContent  :company="selectedCompany" />
+        <CompanyContent :company="selectedCompany" />
       </BaseModal>
     </template>
   </div>
@@ -207,6 +341,17 @@ onBeforeUnmount(() => {
   width: 100%;
   overflow: hidden;
   position: relative;
+}
+
+/* Elemento de transición para la animación */
+.modal-transition-element {
+  position: fixed;
+  z-index: 1001;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  pointer-events: none;
 }
 
 .loading-overlay,

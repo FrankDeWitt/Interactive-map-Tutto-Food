@@ -3,10 +3,12 @@ import { ref, computed, onMounted, onBeforeUnmount, watch, provide } from 'vue';
 import { foodWineCatalog } from '@/data/foods-wines-catalog';
 import CompaniesSidebar from '@/components/CompaniesSidebar.vue';
 import ContentPanel from '@/components/ContentPanel.vue';
-import CompanyModal from '@/components/ui/CompanyModal.vue';
-import { preloadCatalogImages, areCatalogImagesPreloaded } from '@/utils/imageService';
+import BaseModal from '@/components/ui/BaseModal.vue';
+import CompanyContent from '@/components/context/CompanyContent.vue';
+import { preloadCatalogImages } from '@/utils/imageService';
 import { gsap } from 'gsap';
 import loveHeader from '../assets/images/love-header.png';
+import backgroundImage from '../assets/images/background.jpg';
 
 const props = defineProps({
   catalogIndex: {
@@ -26,7 +28,7 @@ const catalogData = computed(() => {
   return foodWineCatalog[props.catalogIndex];
 });
 
-const openCompanyModal = (company) => {
+const openBaseModal = (company) => {
   selectedCompany.value = company;
 
   // Añadir animación GSAP para el efecto de apertura
@@ -49,7 +51,7 @@ const closeModal = () => {
   });
 };
 
-provide('openCompanyModal', openCompanyModal);
+provide('openBaseModal', openBaseModal);
 
 const loadImages = async () => {
   // Si el catálogo actual ya está en proceso de carga, no iniciar otra carga
@@ -124,7 +126,7 @@ const loadImages = async () => {
 
 const handleCompanySelectEvent = (event) => {
   if (event.detail && event.detail.company) {
-    openCompanyModal(event.detail.company);
+    openBaseModal(event.detail.company);
   }
 };
 
@@ -181,16 +183,18 @@ onBeforeUnmount(() => {
     <template v-else>
       <CompaniesSidebar
           :companies="catalogData"
-          @select-company="openCompanyModal"
+          @select-company="openBaseModal"
       />
 
       <ContentPanel />
 
-      <CompanyModal
-          :company="selectedCompany"
+      <BaseModal
+          :background-image="backgroundImage"
           :is-open="isModalOpen"
           @close="closeModal"
-      />
+      >
+        <CompanyContent  :company="selectedCompany" />
+      </BaseModal>
     </template>
   </div>
 </template>

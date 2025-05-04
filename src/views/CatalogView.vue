@@ -7,7 +7,7 @@ import BaseModal from '@/components/ui/BaseModal.vue';
 import CompanyContent from '@/components/context/CompanyContent.vue';
 import { preloadCatalogImages } from '@/utils/imageService';
 import { gsap } from 'gsap';
-import loveHeader from '../assets/images/love-header.png';
+import loveHeader from '@/assets/images/love-header-meat-cured-meat.png';
 import backgroundImage from '../assets/images/background.jpg';
 
 const props = defineProps({

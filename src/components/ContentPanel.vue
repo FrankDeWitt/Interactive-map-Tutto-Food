@@ -2,7 +2,8 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import juntaCylLogo from '../assets/images/junta-footer.png';
-import loveHeader from '../assets/images/love-header.png';
+import loveHeaderSpeciality from '../assets/images/love-header-speciality.png';
+import loveHeaderMeat from '../assets/images/love-header-meat-cured-meat.png';
 import MapGridMeat from "@/components/MapGridMeat.vue";
 import MapGridSpeciality from "@/components/MapGridSpeciality.vue";
 
@@ -21,7 +22,7 @@ const isSpecialityRoute = computed(() => {
   <div class="content">
     <header class="header">
       <div class="logo">
-        <img :src="loveHeader" alt="Love at first bite" v-once/>
+        <img :src="isMeatRoute ? loveHeaderMeat : loveHeaderSpeciality" alt="Love at first bite" v-once/>
       </div>
     </header>
 

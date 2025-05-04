@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router';
 import { foodWineCatalog } from '@/data/foods-wines-catalog';
 import { ref, onMounted } from 'vue';
-import loveHeader from '@/assets/images/love-header.png';
+import loveHeader from '@/assets/images/love-header-meat-cured-meat.png';
 import { gsap } from 'gsap';
 
 const router = useRouter();

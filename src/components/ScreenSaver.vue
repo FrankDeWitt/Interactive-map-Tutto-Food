@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { foodWineCatalog } from '@/data/foods-wines-catalog';
 import { getPreloadedImageSrc, preloadImage } from '@/utils/imageService';
-import loveHeader from '@/assets/images/love-header.png';
+import loveHeader from '@/assets/images/love-header-meat-cured-meat.png';
 import { gsap } from 'gsap'; // Importamos GSAP para animaciones suaves
 
 const props = defineProps({
